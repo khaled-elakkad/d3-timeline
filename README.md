@@ -1,6 +1,6 @@
 # d3-timeline
 
-A d3 v4 version of d3-timeline 
+A d3 v5 version of d3-timeline 
 
 Get something that looks like
 
@@ -209,7 +209,7 @@ sets the placement of the axis. Defaults to bottom.
 
 ### .colors(callback)
 
-sets the d3 color scale the data series in the timeline. Defaults to `d3.scale.category20()`.
+sets the d3 color scale the data series in the timeline. Defaults to `d3-scale-chromatic.schemeCategory10()`.
 
 ### .colorProperty(propertyName)
 
