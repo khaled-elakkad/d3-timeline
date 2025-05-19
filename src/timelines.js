@@ -4,7 +4,7 @@ import { range } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
 import { timeHour } from 'd3-time';
 import { scaleOrdinal, scaleTime, scaleLinear } from 'd3-scale';
-import { event, mouse, namespace, namespaces, select } from 'd3-selection';
+import { pointer, namespaces, select } from 'd3-selection';
 import { zoom as d3z } from 'd3-zoom'
 import { schemeCategory10 } from 'd3-scale-chromatic';
 
@@ -32,7 +32,7 @@ var timelines = function() {
 					tickSize: 6,
 					tickValues: null
 				},
-				allowZoom = true,
+				allowZoom = false,
 				axisBgColor = "white",
 				chartData = {},
 				colorCycle = scaleOrdinal(schemeCategory10),
@@ -174,17 +174,17 @@ var timelines = function() {
 				.attr("class", "timeline-label")
 				.attr("transform", "translate(" + labelMargin + "," + rowsDown + ")")
 				.text(hasLabel ? labelFunction(datum.label) : datum.id)
-				.on("click", function (d, i) {
+				.on("click", function (event, d) {
 
 					console.log("label click!");
-					var point = mouse(this);
+					var point = pointer(event);
 					gParent.append("rect")
 						.attr("id", "clickpoint")
 						.attr("x", point[0])
 						.attr("width", 10)
 						.attr("height", itemHeight);
 
-					click(d, index, datum, point, xScale.invert(point[0]));
+					click(event, d, index, datum, point, xScale.invert(point[0]));
 				});
 		};
 
@@ -358,21 +358,21 @@ var timelines = function() {
 							}
 							return colorCycle(index);
 						})
-						.on("mousemove", function (d, i) {
-							hover(d, index, datum, i);
+						.on("mousemove", function (event, d) {
+							hover(event, d, index, datum);
 						})
-						.on("mouseover", function (d, i) {
-							mouseover(d, i, datum, i);
+						.on("mouseover", function  (event, d) {
+							mouseover(event, d, index, datum);
 						})
-						.on("mouseout", function (d, i) {
-							mouseout(d, i, datum, i);
+						.on("mouseout", function  (event, d) {
+							mouseout(event, d, index, datum);
 						})
-						.on("click", function (d, i) {
-							var point = mouse(this);
+						.on("click", function (event, d) {
+							var point = pointer(event);
 							var selectedRect = select(this).node();
 							var selectorLabel = "text#" + selectedRect.id + '.textnumbers';
 							var selectedLabel = select(selectorLabel).node();
-							click(d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
+							click(event, d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
 						})
 						.attr("class", function (d, i) {
 							return datum.class ? "timelineSeries_"+datum.class : "timelineSeries_"+index;
@@ -398,15 +398,15 @@ var timelines = function() {
 						.text(function(d) {
 							return d.label;
 						})
-						.on("click", function(d, i){
+						.on("click", function(event, d){
 							// when clicking on the label, call the click for the rectangle with the same id
-							var point = mouse(this);
+							var point = pointer(event);
 							var id = this.id;
 							var labelSelector = "text#" + id + ".textnumbers";
 							var selectedLabel = select(labelSelector).node();
 							var selector = "rect#" + id;
 							var selectedRect = select(selector).node();
-							click(d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
+							click(event, d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
 						})
 					;
 
@@ -421,14 +421,14 @@ var timelines = function() {
 						.text(function(d) {
 							return d.labelNumber;
 						})
-						.on("click", function(d, i){
+						.on("click", function(event){
 							// when clicking on the label, call the click for the rectangle with the same id
-							var point = mouse(this);
+							var point = pointer(event);
 							var id = this.id;
 							var selectedLabel = select(this).node();
 							var selector = "rect#" + id;
 							var selectedRect = select(selector).node();
-							click(d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
+							click(event, d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
 						})
 					;
 
@@ -479,7 +479,7 @@ var timelines = function() {
 			if (timeAxisTick) { appendTimeAxisTick(g, xAxis, maxStack); }
 
 			if (width > gParentSize.width) { // only if the scrolling should be allowed
-				var move = function() {
+				var move = function(event) {
 					g.select(".view")
 					.attr("transform", "translate(" + event.transform.x + ",0)"
 														 + "scale(" + event.transform.k + " 1)");
@@ -498,7 +498,7 @@ var timelines = function() {
 				};
 			};
 
-			if (! allowZoom) {
+			if (allowZoom) {
 				var zoom = d3z()
 					.scaleExtent([0, maxZoom]) // max zoom defaults to 5
 					.translateExtent([[0, 0], [width, 0]]) // [x0, y0], [x1, y1] don't allow translating y-axis
@@ -507,11 +507,11 @@ var timelines = function() {
 				gParent.classed("scrollable", true)
 					.call(zoom);
 				
-				g.on("wheel", function() {
+				g.on("wheel", function(event) {
 					event.preventDefault();
 					event.stopImmediatePropagation();
 				});
-				g.on("dblclick.zoom", function() {
+				g.on("dblclick.zoom", function(event) {
 					event.preventDefault();
 					event.stopImmediatePropagation();
 				});

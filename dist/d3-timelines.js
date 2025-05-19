@@ -1199,7 +1199,7 @@
 						tickSize: 6,
 						tickValues: null
 					},
-					allowZoom = true,
+					allowZoom = false,
 					axisBgColor = "white",
 					chartData = {},
 					colorCycle = d3Scale.scaleOrdinal(schemeCategory10),
@@ -1341,17 +1341,17 @@
 					.attr("class", "timeline-label")
 					.attr("transform", "translate(" + labelMargin + "," + rowsDown + ")")
 					.text(hasLabel ? labelFunction(datum.label) : datum.id)
-					.on("click", function (d, i) {
+					.on("click", function (event, d) {
 
 						console.log("label click!");
-						var point = d3Selection.mouse(this);
+						var point = d3Selection.pointer(event);
 						gParent.append("rect")
 							.attr("id", "clickpoint")
 							.attr("x", point[0])
 							.attr("width", 10)
 							.attr("height", itemHeight);
 
-						click(d, index, datum, point, xScale.invert(point[0]));
+						click(event, d, index, datum, point, xScale.invert(point[0]));
 					});
 			};
 
@@ -1525,21 +1525,21 @@
 								}
 								return colorCycle(index);
 							})
-							.on("mousemove", function (d, i) {
-								hover(d, index, datum, i);
+							.on("mousemove", function (event, d) {
+								hover(event, d, index, datum);
 							})
-							.on("mouseover", function (d, i) {
-								mouseover(d, i, datum, i);
+							.on("mouseover", function  (event, d) {
+								mouseover(event, d, index, datum);
 							})
-							.on("mouseout", function (d, i) {
-								mouseout(d, i, datum, i);
+							.on("mouseout", function  (event, d) {
+								mouseout(event, d, index, datum);
 							})
-							.on("click", function (d, i) {
-								var point = d3Selection.mouse(this);
+							.on("click", function (event, d) {
+								var point = d3Selection.pointer(event);
 								var selectedRect = d3Selection.select(this).node();
 								var selectorLabel = "text#" + selectedRect.id + '.textnumbers';
 								var selectedLabel = d3Selection.select(selectorLabel).node();
-								click(d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
+								click(event, d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
 							})
 							.attr("class", function (d, i) {
 								return datum.class ? "timelineSeries_"+datum.class : "timelineSeries_"+index;
@@ -1565,15 +1565,15 @@
 							.text(function(d) {
 								return d.label;
 							})
-							.on("click", function(d, i){
+							.on("click", function(event, d){
 								// when clicking on the label, call the click for the rectangle with the same id
-								var point = d3Selection.mouse(this);
+								var point = d3Selection.pointer(event);
 								var id = this.id;
 								var labelSelector = "text#" + id + ".textnumbers";
 								var selectedLabel = d3Selection.select(labelSelector).node();
 								var selector = "rect#" + id;
 								var selectedRect = d3Selection.select(selector).node();
-								click(d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
+								click(event, d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
 							})
 						;
 
@@ -1588,14 +1588,14 @@
 							.text(function(d) {
 								return d.labelNumber;
 							})
-							.on("click", function(d, i){
+							.on("click", function(event){
 								// when clicking on the label, call the click for the rectangle with the same id
-								var point = d3Selection.mouse(this);
+								var point = d3Selection.pointer(event);
 								var id = this.id;
 								var selectedLabel = d3Selection.select(this).node();
 								var selector = "rect#" + id;
 								var selectedRect = d3Selection.select(selector).node();
-								click(d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
+								click(event, d, index, datum, selectedLabel, selectedRect, xScale.invert(point[0]));
 							})
 						;
 
@@ -1646,26 +1646,26 @@
 				if (timeAxisTick) { appendTimeAxisTick(g, xAxis, maxStack); }
 
 				if (width > gParentSize.width) { // only if the scrolling should be allowed
-					var move = function() {
+					var move = function(event) {
 						g.select(".view")
-						.attr("transform", "translate(" + d3Selection.event.transform.x + ",0)"
-															 + "scale(" + d3Selection.event.transform.k + " 1)");
+						.attr("transform", "translate(" + event.transform.x + ",0)"
+															 + "scale(" + event.transform.k + " 1)");
 
 						g.selectAll(".timeline-xAxis")
 							.attr("transform", function(d) {
-								 return "translate(" + d3Selection.event.transform.x + ", " + timeAxisYPosition + ")"
-											+ "scale(" + d3Selection.event.transform.k + " 1)";
+								 return "translate(" + event.transform.x + ", " + timeAxisYPosition + ")"
+											+ "scale(" + event.transform.k + " 1)";
 							});
 
-						var new_xScale = d3Selection.event.transform.rescaleX(xScale);
+						var new_xScale = event.transform.rescaleX(xScale);
 						g.selectAll('.timeline-xAxis').call(function(d) { xAxis.scale(new_xScale); });
 
-						var xpos = -d3Selection.event.transform.x;
+						var xpos = -event.transform.x;
 						scroll(xpos, xScale);
 					};
 				};
 
-				if (! allowZoom) {
+				if (allowZoom) {
 					var zoom = d3Zoom.zoom()
 						.scaleExtent([0, maxZoom]) // max zoom defaults to 5
 						.translateExtent([[0, 0], [width, 0]]) // [x0, y0], [x1, y1] don't allow translating y-axis
@@ -1674,13 +1674,13 @@
 					gParent.classed("scrollable", true)
 						.call(zoom);
 					
-					g.on("wheel", function() {
-						d3Selection.event.preventDefault();
-						d3Selection.event.stopImmediatePropagation();
+					g.on("wheel", function(event) {
+						event.preventDefault();
+						event.stopImmediatePropagation();
 					});
-					g.on("dblclick.zoom", function() {
-						d3Selection.event.preventDefault();
-						d3Selection.event.stopImmediatePropagation();
+					g.on("dblclick.zoom", function(event) {
+						event.preventDefault();
+						event.stopImmediatePropagation();
 					});
 				}
 

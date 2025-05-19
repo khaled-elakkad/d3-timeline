@@ -2,7 +2,7 @@
 <html>
 <head>
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	<script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v6.min.js" charset="utf-8"></script>
 	<script src="../dist/d3-timelines.js"></script>
 
 	<style type="text/css">
@@ -150,7 +150,7 @@ var marginRight = 10;
 			function timelineHover(width, newWidth) {
 				var chart = d3.timelines()
 					.linearTime()
-					.allowZoom(false)
+					.allowZoom(true)
 					.itemHeight(60)
 					.labelFloat(25)
 					.itemMargin(0)
@@ -161,16 +161,17 @@ var marginRight = 10;
 					//.showTimeAxisTick()
 					//.showTimeAxisTickFormat({stroke: "4px" })
 					.margin({left: marginLeft, right:marginRight, top:30, bottom:0})
-					.hover(function (d, i, datum) {
+					.hover(function (event, d, index, datum)  {
+					
 					// d is the current rendering object
 					// i is the index during d3 rendering
 					// datum is the id object
 						var div = $('#hoverRes');
 						//var colors = chart.colors();
 						//div.find('.coloredDiv').css('background-color', colors(i));
-						div.find('#name').text(datum.name);
+						div.find('#name').text(d.id);
 					})
-					.click(function (d, i, datum, labelElement, rectElement, duration) {
+					.click(function (_, d, i, datum, labelElement, rectElement, duration) {
 						var ele = d3.select(rectElement);
 						var labelEle = d3.select(labelElement);
 						rectElement.duration = duration;

@@ -1,6 +1,6 @@
 # d3-timeline
 
-A d3 v5 version of d3-timeline 
+A d3 v6 version of d3-timeline 
 
 Get something that looks like
 
@@ -327,7 +327,8 @@ takes in a callback called on mousemove of the timeline data. Example
 
 ```js
 d3.timelines()
-	.hover(function (d, i, datum) {
+	.hover(function (event, d, i, datum) {
+		// event is the current event object
 		// d is the current rendering object
 		// i is the index during d3 rendering
 		// datum is the data object
@@ -340,7 +341,7 @@ Default is timeline-xAxis, but can be used to set any class.
 
 ### .allowZoom
 
-Default is true. Takes a boolean.  If set to false, does not allow zooming.
+Default is false. Takes a boolean.  If set to true, allows zooming.
 
 ### .mouseover(callback)
 
@@ -348,7 +349,8 @@ takes in a callback called on mouseover of the timeline data. Example
 
 ```js
 d3.timelines()
-	.mouseover(function (d, i, datum) {
+	.mouseover(function (event, d, i, datum) {
+		// event is the current event object
 		// d is the current rendering object
 		// i is the index during d3 rendering
 		// datum is the data object
@@ -361,7 +363,8 @@ takes in a callback called on mouseout of the timeline data. Example
 
 ```js
 d3.timelines()
-	.mouseout(function (d, i, datum) {
+	.mouseout(function (event, d, i, datum) {
+		// event is the current event object
 		// d is the current rendering object
 		// i is the index during d3 rendering
 		// datum is the data object
@@ -374,7 +377,8 @@ takes in a callback called on click of the timeline data. Example
 
 ```js
 d3.timelines()
-	.click(function (d, i, datum) {
+	.click(function (event, d, i, datum) {
+		// event is the current event object
 		// d is the current rendering object
 		// i is the index during d3 rendering
 		// datum is the data object

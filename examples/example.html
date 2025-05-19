@@ -2,7 +2,7 @@
 <html>
 <head>
   <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script src="https://d3js.org/d3.v6.min.js" charset="utf-8"></script>
   <script src="../dist/d3-timelines.js"></script>
 
   <style type="text/css">
@@ -138,16 +138,17 @@
           .width(width*4)
           .stack()
           .margin({left:70, right:30, top:0, bottom:0})
-          .hover(function (d, i, datum) {
+          .allowZoom(true)
+          .hover(function (event, d, index, datum) {
           // d is the current rendering object
           // i is the index during d3 rendering
           // datum is the id object
             var div = $('#hoverRes');
             var colors = chart.colors();
-            div.find('.coloredDiv').css('background-color', colors(i))
+            div.find('.coloredDiv').css('background-color', colors(index))
             div.find('#name').text(datum.label);
           })
-          .click(function (d, i, datum) {
+          .click(function (_, d, i, datum) {
             alert(datum.label);
           })
           .scroll(function (x, scale) {
