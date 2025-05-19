@@ -1,6 +1,6 @@
 # d3-timeline
 
-A d3 v6 version of d3-timeline 
+A d3 v7 version of d3-timeline 
 
 Get something that looks like
 

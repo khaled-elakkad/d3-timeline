@@ -1,8 +1,7 @@
-var tape = require("tape"),
-	d3 = Object.assign({}, require("../"), require("d3")),
-    timelines = require("../");
+import test from 'tape';
+import timelines from '../index.js';
 
-tape("timeline() returns the correct version", function(test) {
-  test.equal(timelines.timelines().version(), '1.0.0');
-  test.end();
+test("timeline() returns the correct version", function(t) {
+  t.equal(timelines().version(), '1.0.0');
+  t.end();
 });

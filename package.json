@@ -1,52 +1,52 @@
 {
-	"name": "d3-timelines",
-	"version": "1.5.1",
-	"description": "A d3 v6 version of timeline. Can display single bar timelines, timelines with icons, and timelines that pan.",
-	"keywords": [
-		"d3",
-		"d3-module",
-		"d3-timelines"
-	],
-	"license": "BSD-3-Clause",
-	"main": "build/d3-timelines.js",
-	"jsnext:main": "index",
-	"homepage": "https://github.com/denisemauldin/d3-timeline",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/denisemauldin/d3-timeline.git"
-	},
+  "name": "d3-timelines",
+  "version": "1.6.1",
+  "description": "A d3 v7 version of timeline. Can display single bar timelines, timelines with icons, and timelines that pan.",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "d3-timelines"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "build/d3-timelines.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/denisemauldin/d3-timeline",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/denisemauldin/d3-timeline.git"
+  },
+  "type": "module",
 	"scripts": {
-		"pretest": "rm -rf build && mkdir build && rollup -c -f umd -n d3 -o build/d3-timelines.js -- index.js",
-		"test": "tape 'test/**/*-test.js'",
-		"prepare": "npm run test && terser build/d3-timelines.js -c -m -o build/d3-timelines.min.js",
+		"pretest": "rm -rf build && mkdir build && yarn rollup -c",
+		"test": "node test/timeline-test.js",
+		"prepare": "yarn test && yarn terser build/d3-timelines.js -c -m -o build/d3-timelines.min.js",
 		"postpublish": "zip -j build/d3-timelines.zip -- LICENSE README.md build/d3-timelines.js build/d3-timelines.min.js",
 		"build": "yarn && cp -f build/d3-timelines.js dist/d3-timelines.js"
 	},
-	"peerDependencies": {
-		"d3-array": "^2.0.0",
-		"d3-axis": "^2.0.0",
-		"d3-scale": "^3.0.0",
-		"d3-selection": "^2.0.0",
-		"d3-time": "^2.0.0",
-		"d3-time-format": "^3.0.0",
-		"d3-zoom": "^2.0.0"
-	},
-	"devDependencies": {
-		"@types/d3": "5",
-		"rollup": "0.27",
-		"rollup-plugin-node-resolve": "^3.0.0",
-		"tape": "4",
-		"terser": "^5.39.1"
-	},
-	"dependencies": {
-		"d3": "^6.7.0",
-		"d3-array": "^2.0.0",
-		"d3-axis": "^2.0.0",
-		"d3-scale": "^3.0.0",
-		"d3-scale-chromatic": "^3.1.0",
-		"d3-selection": "^2.0.0",
-		"d3-time": "^2.0.0",
-		"d3-time-format": "^3.0.0",
-		"d3-zoom": "^2.0.0"
-	}
+  "peerDependencies": {
+    "d3-array": "^3.0.0",
+    "d3-axis": "^3.0.0",
+    "d3-scale": "^4.0.0",
+    "d3-selection": "^3.0.0",
+    "d3-time": "^3.0.0",
+    "d3-time-format": "^4.0.0",
+    "d3-zoom": "^3.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "rollup": "^3.29.4",
+    "tape": "^5.6.3",
+    "terser": "^5.39.1"
+  },
+  "dependencies": {
+    "d3": "^7.8.5",
+    "d3-array": "^3.0.0",
+    "d3-axis": "^3.0.0",
+    "d3-scale": "^4.0.0",
+    "d3-scale-chromatic": "^3.1.0",
+    "d3-selection": "^3.0.0",
+    "d3-time": "^3.0.0",
+    "d3-time-format": "^4.0.0",
+    "d3-zoom": "^3.0.0"
+  }
 }
