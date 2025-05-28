@@ -1,6 +1,6 @@
 {
   "name": "@agentiq/d3-timelines",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A d3 v7 version of timeline. Can display single bar timelines, timelines with icons, and timelines that pan.",
   "keywords": [
     "d3",
@@ -9,7 +9,11 @@
   ],
   "license": "BSD-3-Clause",
   "main": "build/d3-timelines.js",
-  "jsnext:main": "index",
+  "module": "build/d3-timelines.esm.js",
+  "exports": {
+    "require": "./build/d3-timelines.cjs.js",
+    "import": "./build/d3-timelines.esm.js"
+  },
   "homepage": "https://github.com/khaled-elakkad/d3-timeline",
   "repository": {
     "type": "git",
@@ -19,9 +23,8 @@
   "scripts": {
     "pretest": "rm -rf build && mkdir build && yarn rollup -c",
     "test": "node test/timeline-test.js",
-    "prepare": "yarn test && yarn terser build/d3-timelines.js -c -m -o build/d3-timelines.min.js",
-    "postpublish": "zip -j build/d3-timelines.zip -- LICENSE README.md build/d3-timelines.js build/d3-timelines.min.js",
-    "build": "yarn && cp -f build/d3-timelines.js dist/d3-timelines.js"
+    "prepare": "yarn test",
+    "build": "yarn rollup -c"
   },
   "peerDependencies": {
     "d3-array": "^3.0.0",
@@ -34,9 +37,11 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-commonjs": "^25.0.0",
     "rollup": "^3.29.4",
-    "tape": "^5.6.3",
-    "terser": "^5.39.1"
+    "rollup-plugin-terser": "^7.0.2",
+    "terser": "^5.39.1",
+    "tape": "^5.6.3"
   },
   "dependencies": {
     "d3": "^7.8.5",
